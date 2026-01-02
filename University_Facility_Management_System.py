@@ -1,4 +1,4 @@
 class Teacher(User):
 
-    def init(self):
-        super().init()   
+    def _init_(self):
+        super()._init_()
