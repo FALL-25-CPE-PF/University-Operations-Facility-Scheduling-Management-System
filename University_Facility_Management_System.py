@@ -37,3 +37,22 @@ class User:
                     "role": role
                     })
                 print("Registered Successfully!")
+    def login(self):
+        try:
+            username = input("Enter your Username: ")
+            with open("user_login.csv", "r") as file:
+                reader = csv.DictReader(file)
+                for user in reader:
+                    if username == user["username"]:
+                        password = input("Enter your password: ")
+                        if password == user["password"]:
+                            print("Login Successfully!")
+                            return
+                    else:
+                        print("Incorrect Username!")
+                        break
+                else:
+                    print("Incorrect Details!")
+        except FileNotFoundError:
+            print("Record doesn't exist!")
+    
