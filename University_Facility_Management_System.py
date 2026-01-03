@@ -39,4 +39,4 @@ def add_facility(self):
                 "status": self.status
             })
 
-        print("Facility added successfully")        
+        print("Facility added successfully")
