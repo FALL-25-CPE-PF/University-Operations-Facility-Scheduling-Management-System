@@ -55,3 +55,25 @@ class Teacher(User):
             })
 
         print("Request submitted (Pending)")
+    def view_my_requests(self):
+        if not os.path.exists(REQUEST_FILE):
+            print("No requests found.")
+            return
+
+        print("\n--- MY REQUESTS ---")
+
+        with open(REQUEST_FILE, "r") as f:
+            reader = csv.DictReader(f)
+            found = False
+            for row in reader:
+                if row["user"] == self.username:
+                    found = True
+                    print(
+                        "Facility:", row["facility"],
+                        "| Day:", row["day"],
+                        "| Slot:", row["slot"],
+                        "| Status:", row["status"]
+                    )
+
+        if not found:
+            print("No requests submitted yet.")
