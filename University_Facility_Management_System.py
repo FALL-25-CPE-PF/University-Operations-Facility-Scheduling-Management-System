@@ -6,7 +6,7 @@ class Facility:
         self.days = []
         self.slots = []
         self.status = "Active"
-def add_facility(self):
+    def add_facility(self):
         self.fid = input("Enter facility ID: ")
         self.name = input("Enter facility name: ")
         self.capacity = int(input("Enter capacity: "))
@@ -40,3 +40,20 @@ def add_facility(self):
             })
 
         print("Facility added successfully")
+    def view_facilities(self):
+        if not os.path.exists(FACILITY_FILE):
+            print("No facilities found")
+            return
+
+        print("\n--- ALL FACILITIES ---")
+
+        with open(FACILITY_FILE, "r") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                print(
+                    row["fid"],
+                    row["name"],
+                    "Capacity:", row["capacity"],
+                    "Status:", row["status"]
+                )
+     
