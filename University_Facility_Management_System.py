@@ -85,5 +85,26 @@ class Facility:
             writer.writerows(rows)
 
         print("Facility status updated")
+    # check availability 
+    def is_available(self, day, slot):
+        if not os.path.exists(FACILITY_FILE):
+            return False
+
+        with open(FACILITY_FILE, "r") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if (
+                    row["fid"] == self.fid
+                    and row["status"] == "Active"
+                    and day in row["days"].split("|")
+                    and slot in row["slots"].split("|")
+                ):
+                    return True
+        return False
+    
+class Admin(User):
+
+    def _init_(self):
+        super()._init_()   # username, password, role inherited     
            
      
