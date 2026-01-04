@@ -56,4 +56,34 @@ class Facility:
                     "Capacity:", row["capacity"],
                     "Status:", row["status"]
                 )
+     #  UPDATE FACILITY STATUS 
+    def update_status(self):
+        fid = input("Enter facility ID to update status: ")
+        new_status = input("Enter new status (Active/Inactive): ")
+
+        rows = []
+        updated = False
+
+        with open(FACILITY_FILE, "r") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row["fid"] == fid:
+                    row["status"] = new_status
+                    updated = True
+                rows.append(row)
+
+        if not updated:
+            print("Facility not found")
+            return
+
+        with open(FACILITY_FILE, "w", newline="") as f:
+            writer = csv.DictWriter(
+                f,
+                fieldnames=["fid", "name", "capacity", "days", "slots", "status"]
+            )
+            writer.writeheader()
+            writer.writerows(rows)
+
+        print("Facility status updated")
+           
      
