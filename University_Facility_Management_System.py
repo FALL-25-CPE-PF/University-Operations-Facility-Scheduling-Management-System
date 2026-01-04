@@ -98,3 +98,7 @@ class Teacher(User):
 
         if not found:
             print("No scheduled lectures yet.")
+class Student(User):
+
+    def _init_(self):
+        super()._init_()   # username, password, role
