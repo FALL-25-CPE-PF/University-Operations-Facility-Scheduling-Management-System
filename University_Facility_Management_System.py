@@ -77,3 +77,24 @@ class Teacher(User):
 
         if not found:
             print("No requests submitted yet.")
+    def view_my_schedule(self):
+        if not os.path.exists(SCHEDULE_FILE):
+            print("No schedule available.")
+            return
+
+        print("\n--- MY SCHEDULE ---")
+
+        with open(SCHEDULE_FILE, "r") as f:
+            reader = csv.DictReader(f)
+            found = False
+            for row in reader:
+                if row["user"] == self.username:
+                    found = True
+                    print(
+                        "Facility:", row["facility"],
+                        "| Day:", row["day"],
+                        "| Slot:", row["slot"]
+                    )
+
+        if not found:
+            print("No scheduled lectures yet.")
