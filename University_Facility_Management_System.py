@@ -127,3 +127,31 @@ class Student(User):
 
             else:
                 print("Invalid option")
+    def request_facility(self):
+        facility = input("Enter facility name: ")
+        day = input("Enter day (Mon/Tue/Wed): ")
+        slot = input("Enter time slot (9-11 / 11-1): ")
+        purpose = input("Enter purpose (Practice/Event): ")
+
+        file_exists = os.path.exists(REQUEST_FILE)
+
+        with open(REQUEST_FILE, "a", newline="") as f:
+            writer = csv.DictWriter(
+                f,
+                fieldnames=["user","role","facility","day","slot","purpose","status"]
+            )
+
+            if not file_exists:
+                writer.writeheader()
+
+            writer.writerow({
+                "user": self.username,
+                "role": self.role,
+                "facility": facility,
+                "day": day,
+                "slot": slot,
+                "purpose": purpose,
+                "status": "Pending"
+            })
+
+        print("Request submitted (Pending)")
