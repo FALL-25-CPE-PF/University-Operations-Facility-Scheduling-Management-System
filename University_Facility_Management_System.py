@@ -147,6 +147,29 @@ class Admin(User):
 
             else:
                 print("Invalid option")
+    def view_requests(self):
+        if not os.path.exists(REQUEST_FILE):
+            print("No requests submitted yet.")
+            return
+
+        print("\n------ ALL REQUESTS ------")
+
+        with open(REQUEST_FILE, "r") as f:
+            reader = csv.DictReader(f)
+            empty = True
+            for i, row in enumerate(reader, start=1):
+                empty = False
+                print(
+                    f"{i}. User: {row['user']} "
+                    f"| Role: {row['role']} "
+                    f"| Facility: {row['facility']} "
+                    f"| Day: {row['day']} "
+                    f"| Slot: {row['slot']} "
+                    f"| Status: {row['status']}"
+                )
+
+        if empty:
+            print("Request file is empty.")            
         
            
      
