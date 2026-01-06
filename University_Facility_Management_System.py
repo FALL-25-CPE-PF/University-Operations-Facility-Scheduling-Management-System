@@ -231,7 +231,41 @@ class Admin(User):
                 fieldnames=["user","role","facility","day","slot","purpose","status"]
             )
             writer.writeheader()
-            writer.writerows(rows)           
+            writer.writerows(rows) 
+    def generate_schedule(self):
+        if not os.path.exists(REQUEST_FILE):
+            print("No requests file found.")
+            return
+
+        scheduled_any = False
+        file_exists = os.path.exists(SCHEDULE_FILE)
+
+        with open(REQUEST_FILE, "r") as rf, open(SCHEDULE_FILE, "a", newline="") as sf:
+            req_reader = csv.DictReader(rf)
+            sch_writer = csv.DictWriter(
+                sf,
+                fieldnames=["facility", "day", "slot", "user", "role"]
+            )
+
+            if not file_exists:
+                sch_writer.writeheader()
+
+            for row in req_reader:
+                if row["status"] == "Approved":
+                    sch_writer.writerow({
+                        "facility": row["facility"],
+                        "day": row["day"],
+                        "slot": row["slot"],
+                        "user": row["user"],
+                        "role": row["role"]
+                    })
+                    scheduled_any = True
+
+        if scheduled_any:
+            print("Schedule generated successfully.")
+        else:
+            print("No approved requests found.")
+                  
         
            
      
