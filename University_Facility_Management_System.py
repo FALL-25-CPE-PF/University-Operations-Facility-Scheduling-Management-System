@@ -177,3 +177,36 @@ class Student(User):
 
         if not found:
             print("No requests submitted yet.")
+    def cancel_pending_request(self):
+        if not os.path.exists(REQUEST_FILE):
+            print("No request file found.")
+            return
+
+        rows = []
+        cancelled = False
+
+        with open(REQUEST_FILE, "r") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if (
+                    row["user"] == self.username
+                    and row["status"] == "Pending"
+                    and not cancelled
+                ):
+                    cancelled = True
+                    continue   # skip this request (delete)
+                rows.append(row)
+
+        if not cancelled:
+            print("No pending request to cancel.")
+            return
+
+        with open(REQUEST_FILE, "w", newline="") as f:
+            writer = csv.DictWriter(
+                f,
+                fieldnames=["user","role","facility","day","slot","purpose","status"]
+            )
+            writer.writeheader()
+            writer.writerows(rows)
+
+        print("Pending request cancelled.")
