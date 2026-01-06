@@ -169,7 +169,69 @@ class Admin(User):
                 )
 
         if empty:
-            print("Request file is empty.")            
+            print("Request file is empty.") 
+    def manage_requests(self):
+        if not os.path.exists(REQUEST_FILE):
+            print("No requests to manage.")
+            return
+
+        rows = []
+
+        with open(REQUEST_FILE, "r") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                rows.append(row)
+
+        if not rows:
+            print("No requests found.")
+            return
+
+        print("\n--- PENDING REQUESTS--- ")
+        pending = []
+
+        for i, row in enumerate(rows, start=1):
+            if row["status"] == "Pending":
+                pending.append(i)
+                print(
+                    f"{i}. {row['user']} ({row['role']}) "
+                    f"| {row['facility']} | {row['day']} | {row['slot']}"
+                )
+
+        if not pending:
+            print("No pending requests.")
+            return
+
+        try:
+            choice = int(input("Select request number: "))
+        except ValueError:
+            print("Invalid input.")
+            return
+
+        if choice not in pending:
+            print("Invalid selection.")
+            return
+
+        action = input("Approve or Reject (A/R): ").lower()
+
+        if action == "a":
+            rows[choice - 1]["status"] = "Approved"
+            print("Request approved.")
+
+        elif action == "r":
+            rows[choice - 1]["status"] = "Rejected"
+            print("Request rejected.")
+
+        else:
+            print("Invalid action.")
+            return
+
+        with open(REQUEST_FILE, "w", newline="") as f:
+            writer = csv.DictWriter(
+                f,
+                fieldnames=["user","role","facility","day","slot","purpose","status"]
+            )
+            writer.writeheader()
+            writer.writerows(rows)           
         
            
      
