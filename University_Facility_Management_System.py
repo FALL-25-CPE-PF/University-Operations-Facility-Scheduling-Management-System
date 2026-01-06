@@ -105,6 +105,48 @@ class Facility:
 class Admin(User):
 
     def _init_(self):
-        super()._init_()   # username, password, role inherited     
+        super()._init_()   # username, password, role inherited 
+     #  admin menu
+    def admin_menu(self):
+        while True:
+            print("\n========== ADMIN MODE ==========")
+            print("1. Add Facility")
+            print("2. View Facilities")
+            print("3. Update Facility Status")
+            print("4. View All Requests")
+            print("5. Manage Requests (Approve / Reject)")
+            print("6. Generate Schedule")
+            print("7. Logout")
+
+            choice = input("Select option: ")
+
+            if choice == "1":
+                f = Facility()
+                f.add_facility()
+
+            elif choice == "2":
+                f = Facility()
+                f.view_facilities()
+
+            elif choice == "3":
+                f = Facility()
+                f.update_status()
+
+            elif choice == "4":
+                self.view_requests()
+
+            elif choice == "5":
+                self.manage_requests()
+            
+            elif choice == "6":
+                self.generate_schedule()
+
+            elif choice == "7":
+                print("Admin logged out")
+                break
+
+            else:
+                print("Invalid option")
+        
            
      
