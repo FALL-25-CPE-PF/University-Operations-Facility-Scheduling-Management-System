@@ -631,3 +631,25 @@ def main_menu():
 
         else:
             print("Invalid option")
+
+def role_router(user):
+    if user.role == "admin":
+        admin = Admin()
+        admin.username = user.username
+        admin.role = user.role
+        admin.admin_menu()
+
+    elif user.role == "teacher":
+        teacher = Teacher()
+        teacher.username = user.username
+        teacher.role = user.role
+        teacher.teacher_menu()
+
+    elif user.role == "student":
+        student = Student()
+        student.username = user.username
+        student.role = user.role
+        student.student_menu()
+
+    else:
+        print("Unknown role")
