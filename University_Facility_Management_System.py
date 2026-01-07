@@ -601,3 +601,33 @@ class Student(User):
             writer.writerows(rows)
 
         print("Pending request cancelled.")
+def main_menu():
+    while True:
+        print("\n====== UNIVERSITY MANAGEMENT SYSTEM ======")
+        print("1. Register New User")
+        print("2. Login")
+        print("3. Change Password")
+        print("4. Exit")
+        print("=" * 42)
+        choice = input("Select option: ")
+
+        u = User()
+
+        if choice == "1":
+            u.register()
+
+        elif choice == "2":
+            if u.login():
+                role_router(u)
+            else:
+                print("Login failed")
+
+        elif choice == "3":
+            u.change_password()
+
+        elif choice == "4":
+            print("System exited")
+            break
+
+        else:
+            print("Invalid option")
