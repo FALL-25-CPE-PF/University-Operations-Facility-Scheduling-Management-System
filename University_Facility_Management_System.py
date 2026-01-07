@@ -102,3 +102,8 @@ class User:
         except FileNotFoundError:
             print("Record doesn't exist!")
     
+    # ---------- VIEW PROFILE ----------
+    def view_profile(self):
+        print("\n--- USER PROFILE ---")
+        print("Username:", self.username)
+        print("Role:", self.role)
