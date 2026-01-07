@@ -653,3 +653,6 @@ def role_router(user):
 
     else:
         print("Unknown role")
+
+if __name__ == "__main__":
+    main_menu() 
