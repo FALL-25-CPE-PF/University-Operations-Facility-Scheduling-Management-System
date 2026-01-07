@@ -59,9 +59,10 @@ class User:
                     self.role = row["role"]
                     print("Login successful")
                     return True
+
         print("Invalid username or password")
         return False
-    
+
     # ---------- CHANGE PASSWORD ----------
     def change_password(self):
         try:
@@ -100,12 +101,14 @@ class User:
                             writer.writerow(user)
         except FileNotFoundError:
             print("Record doesn't exist!")
-    
+
     # ---------- VIEW PROFILE ----------
     def view_profile(self):
         print("\n--- USER PROFILE ---")
         print("Username:", self.username)
         print("Role:", self.role)
+
+
 class Facility:
     def _init_(self):
         self.fid = None
@@ -114,11 +117,12 @@ class Facility:
         self.days = []
         self.slots = []
         self.status = "Active"
+
+    # ---------- ADD NEW FACILITY ----------
     def add_facility(self):
         self.fid = input("Enter facility ID: ")
         self.name = input("Enter facility name: ")
         self.capacity = int(input("Enter capacity: "))
-
         days_input = input("Enter available days (Mon,Tue,Wed): ")
         self.days = days_input.split(",")
 
@@ -148,6 +152,8 @@ class Facility:
             })
 
         print("Facility added successfully")
+
+    # ---------- VIEW ALL FACILITIES ----------
     def view_facilities(self):
         if not os.path.exists(FACILITY_FILE):
             print("No facilities found")
@@ -164,7 +170,8 @@ class Facility:
                     "Capacity:", row["capacity"],
                     "Status:", row["status"]
                 )
-     #  UPDATE FACILITY STATUS 
+
+    # ---------- UPDATE FACILITY STATUS ----------
     def update_status(self):
         fid = input("Enter facility ID to update status: ")
         new_status = input("Enter new status (Active/Inactive): ")
@@ -193,7 +200,8 @@ class Facility:
             writer.writerows(rows)
 
         print("Facility status updated")
-    # check availability 
+
+    # ---------- CHECK AVAILABILITY ----------
     def is_available(self, day, slot):
         if not os.path.exists(FACILITY_FILE):
             return False
@@ -213,8 +221,8 @@ class Facility:
 class Admin(User):
 
     def _init_(self):
-        super()._init_()   # username, password, role inherited 
-     #  admin menu
+        super()._init_()   
+    # ---------------- ADMIN MENU ----------------
     def admin_menu(self):
         while True:
             print("\n========== ADMIN MODE ==========")
@@ -255,6 +263,7 @@ class Admin(User):
 
             else:
                 print("Invalid option")
+
     def view_requests(self):
         if not os.path.exists(REQUEST_FILE):
             print("No requests submitted yet.")
@@ -277,7 +286,7 @@ class Admin(User):
                 )
 
         if empty:
-            print("Request file is empty.") 
+            print("Request file is empty.")
     def manage_requests(self):
         if not os.path.exists(REQUEST_FILE):
             print("No requests to manage.")
@@ -294,7 +303,7 @@ class Admin(User):
             print("No requests found.")
             return
 
-        print("\n--- PENDING REQUESTS--- ")
+        print("\n------ PENDING REQUESTS ------")
         pending = []
 
         for i, row in enumerate(rows, start=1):
@@ -339,7 +348,7 @@ class Admin(User):
                 fieldnames=["user","role","facility","day","slot","purpose","status"]
             )
             writer.writeheader()
-            writer.writerows(rows) 
+            writer.writerows(rows)
     def generate_schedule(self):
         if not os.path.exists(REQUEST_FILE):
             print("No requests file found.")
@@ -373,3 +382,222 @@ class Admin(User):
             print("Schedule generated successfully.")
         else:
             print("No approved requests found.")
+
+
+class Teacher(User):
+
+    def _init_(self):
+        super()._init_()
+
+    # ---------------- TEACHER MENU ----------------
+    def teacher_menu(self):
+        while True:
+            print("\n====== TEACHER MODE ======")
+            print("1. Request Lecture / Lab")
+            print("2. View My Requests")
+            print("3. View My Schedule")
+            print("4. Logout")
+
+            choice = input("Select option: ")
+
+            if choice == "1":
+                self.request_facility()
+
+            elif choice == "2":
+                self.view_my_requests()
+
+            elif choice == "3":
+                self.view_my_schedule()
+
+            elif choice == "4":
+                print("Teacher logged out")
+                break
+
+            else:
+                print("Invalid option")
+    def request_facility(self):
+        facility = input("Enter facility name: ")
+        day = input("Enter day (Mon/Tue/Wed): ")
+        slot = input("Enter time slot (9-11 / 11-1): ")
+        purpose = input("Enter purpose (Lecture/Lab): ")
+
+        file_exists = os.path.exists(REQUEST_FILE)
+
+        with open(REQUEST_FILE, "a", newline="") as f:
+            writer = csv.DictWriter(
+                f,
+                fieldnames=["user","role","facility","day","slot","purpose","status"]
+            )
+
+            if not file_exists:
+                writer.writeheader()
+
+            writer.writerow({
+                "user": self.username,
+                "role": self.role,
+                "facility": facility,
+                "day": day,
+                "slot": slot,
+                "purpose": purpose,
+                "status": "Pending"
+            })
+
+        print("Request submitted (Pending)")
+    def view_my_requests(self):
+        if not os.path.exists(REQUEST_FILE):
+            print("No requests found.")
+            return
+
+        print("\n--- MY REQUESTS ---")
+
+        with open(REQUEST_FILE, "r") as f:
+            reader = csv.DictReader(f)
+            found = False
+            for row in reader:
+                if row["user"] == self.username:
+                    found = True
+                    print(
+                        "Facility:", row["facility"],
+                        "| Day:", row["day"],
+                        "| Slot:", row["slot"],
+                        "| Status:", row["status"]
+                    )
+
+        if not found:
+            print("No requests submitted yet.")
+    def view_my_schedule(self):
+        if not os.path.exists(SCHEDULE_FILE):
+            print("No schedule available.")
+            return
+
+        print("\n--- MY SCHEDULE ---")
+
+        with open(SCHEDULE_FILE, "r") as f:
+            reader = csv.DictReader(f)
+            found = False
+            for row in reader:
+                if row["user"] == self.username:
+                    found = True
+                    print(
+                        "Facility:", row["facility"],
+                        "| Day:", row["day"],
+                        "| Slot:", row["slot"]
+                    )
+
+        if not found:
+            print("No scheduled lectures yet.")
+
+class Student(User):
+
+    def _init_(self):
+        super()._init_()   
+
+    # ---------------- STUDENT MENU ----------------
+    def student_menu(self):
+        while True:
+            print("\n====== STUDENT MODE ======")
+            print("1. Request Facility")
+            print("2. View My Requests")
+            print("3. Cancel Pending Request")
+            print("4. Logout")
+
+            choice = input("Select option: ")
+
+            if choice == "1":
+                self.request_facility()
+
+            elif choice == "2":
+                self.view_my_requests()
+
+            elif choice == "3":
+                self.cancel_pending_request()
+
+            elif choice == "4":
+                print("Student logged out")
+                break
+
+            else:
+                print("Invalid option")
+    def request_facility(self):
+        facility = input("Enter facility name: ")
+        day = input("Enter day (Mon/Tue/Wed): ")
+        slot = input("Enter time slot (9-11 / 11-1): ")
+        purpose = input("Enter purpose (Practice/Event): ")
+
+        file_exists = os.path.exists(REQUEST_FILE)
+
+        with open(REQUEST_FILE, "a", newline="") as f:
+            writer = csv.DictWriter(
+                f,
+                fieldnames=["user","role","facility","day","slot","purpose","status"]
+            )
+
+            if not file_exists:
+                writer.writeheader()
+
+            writer.writerow({
+                "user": self.username,
+                "role": self.role,
+                "facility": facility,
+                "day": day,
+                "slot": slot,
+                "purpose": purpose,
+                "status": "Pending"
+            })
+
+        print("Request submitted (Pending)")
+    def view_my_requests(self):
+        if not os.path.exists(REQUEST_FILE):
+            print("No requests found.")
+            return
+
+        print("\n--- MY REQUESTS ---")
+
+        found = False
+        with open(REQUEST_FILE, "r") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row["user"] == self.username:
+                    found = True
+                    print(
+                        "Facility:", row["facility"],
+                        "| Day:", row["day"],
+                        "| Slot:", row["slot"],
+                        "| Status:", row["status"]
+                    )
+
+        if not found:
+            print("No requests submitted yet.")
+    def cancel_pending_request(self):
+        if not os.path.exists(REQUEST_FILE):
+            print("No request file found.")
+            return
+
+        rows = []
+        cancelled = False
+
+        with open(REQUEST_FILE, "r") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if (
+                    row["user"] == self.username
+                    and row["status"] == "Pending"
+                    and not cancelled
+                ):
+                    cancelled = True
+                    continue   
+                rows.append(row)
+
+        if not cancelled:
+            print("No pending request to cancel.")
+            return
+
+        with open(REQUEST_FILE, "w", newline="") as f:
+            writer = csv.DictWriter(
+                f,
+                fieldnames=["user","role","facility","day","slot","purpose","status"]
+            )
+            writer.writeheader()
+            writer.writerows(rows)
+
+        print("Pending request cancelled.")
