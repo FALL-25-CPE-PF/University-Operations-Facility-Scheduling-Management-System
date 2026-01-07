@@ -14,7 +14,7 @@ class User:
 
     # ---------- REGISTER NEW USER ----------
     def register(self):
-        username = input("Enter Username: ")
+        username = input("\nEnter Username: ")
         file_exist = os.path.exists(USERS_FILE)
         
         if file_exist:
@@ -43,11 +43,11 @@ class User:
 
     # ---------- LOGIN ----------
     def login(self):
-        username = input("Enter username: ")
+        username = input("\nEnter username: ")
         password = input("Enter password: ")
 
         if not os.path.exists(USERS_FILE):
-            print("No users found")
+            print("No users found!")
             return False
 
         with open(USERS_FILE, "r") as f:
@@ -57,10 +57,10 @@ class User:
                     self.username = username
                     self.password = password
                     self.role = row["role"]
-                    print("Login successful")
+                    print("Login successful!")
                     return True
 
-        print("Invalid username or password")
+        print("Invalid username or password!")
         return False
 
     # ---------- CHANGE PASSWORD ----------
@@ -77,7 +77,7 @@ class User:
                 found = False
 
                 print("Please Verify your identity to continue.")
-                username = input("Enter Username: ")
+                username = input("\nEnter Username: ")
                 for user in users:
                     if user["username"] == username:
                         old_password = input("Enter Old Password: ")
@@ -151,12 +151,12 @@ class Facility:
                 "status": self.status
             })
 
-        print("Facility added successfully")
+        print("Facility added successfully!")
 
     # ---------- VIEW ALL FACILITIES ----------
     def view_facilities(self):
         if not os.path.exists(FACILITY_FILE):
-            print("No facilities found")
+            print("No facilities found!")
             return
 
         print("\n--- ALL FACILITIES ---")
@@ -188,7 +188,7 @@ class Facility:
                 rows.append(row)
 
         if not updated:
-            print("Facility not found")
+            print("Facility not found!")
             return
 
         with open(FACILITY_FILE, "w", newline="") as f:
@@ -199,7 +199,7 @@ class Facility:
             writer.writeheader()
             writer.writerows(rows)
 
-        print("Facility status updated")
+        print("Facility status updated!")
 
     # ---------- CHECK AVAILABILITY ----------
     def is_available(self, day, slot):
@@ -225,7 +225,9 @@ class Admin(User):
     # ---------------- ADMIN MENU ----------------
     def admin_menu(self):
         while True:
-            print("\n========== ADMIN MODE ==========")
+            print("\n" + "=" * 60)
+            print("                    ADMIN MODE")
+            print("=" * 60)
             print("1. Add Facility")
             print("2. View Facilities")
             print("3. Update Facility Status")
@@ -233,8 +235,9 @@ class Admin(User):
             print("5. Manage Requests (Approve / Reject)")
             print("6. Generate Schedule")
             print("7. Logout")
+            print("=" * 60)
 
-            choice = input("Select option: ")
+            choice = input("Select an option (1-7): ")
 
             if choice == "1":
                 f = Facility()
@@ -258,15 +261,15 @@ class Admin(User):
                 self.generate_schedule()
 
             elif choice == "7":
-                print("Admin logged out")
+                print("\nAdmin logged out successfully!.")
                 break
 
             else:
-                print("Invalid option")
+                print("\nInvalid option. Please select 1 to 7.")
 
     def view_requests(self):
         if not os.path.exists(REQUEST_FILE):
-            print("No requests submitted yet.")
+            print("No requests submitted yet!")
             return
 
         print("\n------ ALL REQUESTS ------")
@@ -289,7 +292,7 @@ class Admin(User):
             print("Request file is empty.")
     def manage_requests(self):
         if not os.path.exists(REQUEST_FILE):
-            print("No requests to manage.")
+            print("No requests to manage!")
             return
 
         rows = []
@@ -300,7 +303,7 @@ class Admin(User):
                 rows.append(row)
 
         if not rows:
-            print("No requests found.")
+            print("No requests found!")
             return
 
         print("\n------ PENDING REQUESTS ------")
@@ -315,31 +318,31 @@ class Admin(User):
                 )
 
         if not pending:
-            print("No pending requests.")
+            print("No pending requests!")
             return
 
         try:
             choice = int(input("Select request number: "))
         except ValueError:
-            print("Invalid input.")
+            print("Invalid input!")
             return
 
         if choice not in pending:
-            print("Invalid selection.")
+            print("Invalid selection!")
             return
 
         action = input("Approve or Reject (A/R): ").lower()
 
         if action == "a":
             rows[choice - 1]["status"] = "Approved"
-            print("Request approved.")
+            print("Request approved!")
 
         elif action == "r":
             rows[choice - 1]["status"] = "Rejected"
-            print("Request rejected.")
+            print("Request rejected!")
 
         else:
-            print("Invalid action.")
+            print("Invalid action!")
             return
 
         with open(REQUEST_FILE, "w", newline="") as f:
@@ -351,7 +354,7 @@ class Admin(User):
             writer.writerows(rows)
     def generate_schedule(self):
         if not os.path.exists(REQUEST_FILE):
-            print("No requests file found.")
+            print("No requests file found!")
             return
 
         scheduled_any = False
@@ -379,9 +382,9 @@ class Admin(User):
                     scheduled_any = True
 
         if scheduled_any:
-            print("Schedule generated successfully.")
+            print("Schedule generated successfully!")
         else:
-            print("No approved requests found.")
+            print("No approved requests found!")
 
 
 class Teacher(User):
@@ -392,13 +395,16 @@ class Teacher(User):
     # ---------------- TEACHER MENU ----------------
     def teacher_menu(self):
         while True:
-            print("\n====== TEACHER MODE ======")
+            print("\n" + "=" * 60)
+            print("                  TEACHER MODE")
+            print("=" * 60)
             print("1. Request Lecture / Lab")
             print("2. View My Requests")
             print("3. View My Schedule")
             print("4. Logout")
+            print("=" * 60)
 
-            choice = input("Select option: ")
+            choice = input("Select an option (1-4): ")
 
             if choice == "1":
                 self.request_facility()
@@ -410,11 +416,12 @@ class Teacher(User):
                 self.view_my_schedule()
 
             elif choice == "4":
-                print("Teacher logged out")
+                print("\nTeacher logged out successfully!")
                 break
 
             else:
-                print("Invalid option")
+                print("\nInvalid option. Please select 1 to 4.")
+
     def request_facility(self):
         facility = input("Enter facility name: ")
         day = input("Enter day (Mon/Tue/Wed): ")
@@ -445,7 +452,7 @@ class Teacher(User):
         print("Request submitted (Pending)")
     def view_my_requests(self):
         if not os.path.exists(REQUEST_FILE):
-            print("No requests found.")
+            print("No requests found!")
             return
 
         print("\n--- MY REQUESTS ---")
@@ -467,7 +474,7 @@ class Teacher(User):
             print("No requests submitted yet.")
     def view_my_schedule(self):
         if not os.path.exists(SCHEDULE_FILE):
-            print("No schedule available.")
+            print("No schedule available!")
             return
 
         print("\n--- MY SCHEDULE ---")
@@ -495,13 +502,16 @@ class Student(User):
     # ---------------- STUDENT MENU ----------------
     def student_menu(self):
         while True:
-            print("\n====== STUDENT MODE ======")
+            print("\n" + "=" * 60)
+            print("                  STUDENT MODE")
+            print("=" * 60)
             print("1. Request Facility")
             print("2. View My Requests")
             print("3. Cancel Pending Request")
             print("4. Logout")
+            print("=" * 60)
 
-            choice = input("Select option: ")
+            choice = input("Select an option (1-4): ")
 
             if choice == "1":
                 self.request_facility()
@@ -513,11 +523,12 @@ class Student(User):
                 self.cancel_pending_request()
 
             elif choice == "4":
-                print("Student logged out")
+                print("\nStudent logged out successfully!")
                 break
 
             else:
-                print("Invalid option")
+                print("\nInvalid option. Please select 1 to 4.")
+
     def request_facility(self):
         facility = input("Enter facility name: ")
         day = input("Enter day (Mon/Tue/Wed): ")
@@ -548,7 +559,7 @@ class Student(User):
         print("Request submitted (Pending)")
     def view_my_requests(self):
         if not os.path.exists(REQUEST_FILE):
-            print("No requests found.")
+            print("No requests found!")
             return
 
         print("\n--- MY REQUESTS ---")
@@ -567,10 +578,10 @@ class Student(User):
                     )
 
         if not found:
-            print("No requests submitted yet.")
+            print("No requests submitted yet!")
     def cancel_pending_request(self):
         if not os.path.exists(REQUEST_FILE):
-            print("No request file found.")
+            print("No request file found!")
             return
 
         rows = []
@@ -600,16 +611,19 @@ class Student(User):
             writer.writeheader()
             writer.writerows(rows)
 
-        print("Pending request cancelled.")
+        print("Pending request cancelled!")
 def main_menu():
     while True:
-        print("\n====== UNIVERSITY MANAGEMENT SYSTEM ======")
+        print("\n" + "=" * 60)
+        print("            UNIVERSITY MANAGEMENT SYSTEM")
+        print("=" * 60)
         print("1. Register New User")
         print("2. Login")
         print("3. Change Password")
         print("4. Exit")
-        print("=" * 42)
-        choice = input("Select option: ")
+        print("=" * 60)
+
+        choice = input("Select option (1-4): ")
 
         u = User()
 
@@ -620,17 +634,18 @@ def main_menu():
             if u.login():
                 role_router(u)
             else:
-                print("Login failed")
+                print("\nLogin failed. Please try again.")
 
         elif choice == "3":
             u.change_password()
 
         elif choice == "4":
-            print("System exited")
+            print("\nSystem exited successfully.")
             break
 
         else:
-            print("Invalid option")
+            print("\nInvalid option. Please select 1 to 4.")
+
 
 def role_router(user):
     if user.role == "admin":
@@ -652,7 +667,7 @@ def role_router(user):
         student.student_menu()
 
     else:
-        print("Unknown role")
+        print("Unknown role!")
 
 if __name__ == "__main__":
     main_menu() 
