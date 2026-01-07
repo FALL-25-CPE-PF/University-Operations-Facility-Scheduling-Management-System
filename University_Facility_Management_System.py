@@ -62,3 +62,43 @@ class User:
 
         print("Invalid username or password")
         return False
+    
+    # ---------- CHANGE PASSWORD ----------
+    def change_password(self):
+        try:
+            with open(USERS_FILE,"r") as file:
+                reader= csv.DictReader(file)
+                users = []
+
+                for record in reader:
+                    if record:
+                        users.append(record)
+
+                found = False
+
+                print("Please Verify your identity to continue.")
+                username = input("Enter Username: ")
+                for user in users:
+                    if user["username"] == username:
+                        old_password = input("Enter Old Password: ")
+                        if user["password"] == old_password:
+                            print("Verification Successfull!")
+                            found = True
+                            break
+                        else:
+                            print("Wrong Password!")
+                        break
+                else:
+                    print("Wrong Username!")
+                    
+                if found:
+                    with open(USERS_FILE, "w", newline="") as file:
+                        writer = csv.DictWriter(file, fieldnames=["username","password","role"])
+                        user["password"] = input("Enter new Password: ")
+                        print("Password Changed Successfully!")
+                        writer.writeheader()
+                        for user in users:
+                            writer.writerow(user)
+        except FileNotFoundError:
+            print("Record doesn't exist!")
+    
