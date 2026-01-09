@@ -1,2 +1,7 @@
 facility,day,slot,user,role
-Computer-lab,Mon,9-11,junaid,teacher
+KE-01,Mon,10-12,ifrah,teacher
+Computer Lab,Thursday,8-11,ifrah,teacher
+Computer Lab,Friday,8-11,arslan,teacher
+AICT_Lab,Thursday,8-11,furqan,teacher
+Computer Lab,Mon,9-11,junaid,student
+Computer Lab,Mon,9-11,arslan,teacher

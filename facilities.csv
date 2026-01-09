@@ -1,2 +1,5 @@
 fid,name,capacity,days,slots,status
-01,Computer-lab,40,Mon,9-1,Active
+01,Computer Lab,40,Mon/Tue/Wed/Thur/Fri,8-4,Active
+02,KE-01,40,Mon/Tue/Wed/Thur/Fri,8-4,Active
+03,KE-02,50,Mon/Tue/Wed/Thur/Fri,8-4,Active
+04,AICT-Lab,60,Mon/Thur,8-12,Active
