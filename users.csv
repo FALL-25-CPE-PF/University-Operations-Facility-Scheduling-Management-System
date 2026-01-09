@@ -1,9 +1,9 @@
 username,password,role
-admin,admin123,admin
-ifrah,ifrah123,teacher
 arslan,arslan123,teacher
 furqan,furqan123,teacher
 junaid,junaid123,student
 sairah,sairah123,student
-ayesha,ayesha123,student
 haroon,haroon123,student
+ayesha,ayesha123,student
+ifrah,ifrah123,teacher
+admin,admin123,admin

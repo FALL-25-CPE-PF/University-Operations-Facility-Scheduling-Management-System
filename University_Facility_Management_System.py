@@ -497,7 +497,7 @@ class Teacher(User):
 class Student(User):
 
     def __init__(self):
-        super()._init_()   
+        super().__init__()   
 
     # ---------------- STUDENT MENU ----------------
     def student_menu(self):
