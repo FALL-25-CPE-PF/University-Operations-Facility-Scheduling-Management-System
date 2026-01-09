@@ -7,7 +7,7 @@ REQUEST_FILE = "requests.csv"
 SCHEDULE_FILE = "schedule.csv"
 
 class User:
-    def _init_(self):
+    def __init__(self):
         self.username = None
         self.password = None
         self.role = None
@@ -110,7 +110,7 @@ class User:
 
 
 class Facility:
-    def _init_(self):
+    def __init__(self):
         self.fid = None
         self.name = None
         self.capacity = None
@@ -220,8 +220,8 @@ class Facility:
     
 class Admin(User):
 
-    def _init_(self):
-        super()._init_()   
+    def __init__(self):
+        super().__init__()   
     # ---------------- ADMIN MENU ----------------
     def admin_menu(self):
         while True:
@@ -389,8 +389,8 @@ class Admin(User):
 
 class Teacher(User):
 
-    def _init_(self):
-        super()._init_()
+    def __init__(self):
+        super().__init__()
 
     # ---------------- TEACHER MENU ----------------
     def teacher_menu(self):
@@ -496,7 +496,7 @@ class Teacher(User):
 
 class Student(User):
 
-    def _init_(self):
+    def __init__(self):
         super()._init_()   
 
     # ---------------- STUDENT MENU ----------------
